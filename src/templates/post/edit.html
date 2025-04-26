@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성/수정</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-edit.css') }}">
+</head>
+<body>
+    <header id="common-header">
+        <h1>게시판 시스템</h1>
+        <nav>
+            <ul>
+                <li><a href="../common/index.html">홈</a></li>
+                <li><a href="post-list.html">게시글 목록</a></li>
+                <li><a href="../member/login.html">로그인</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="post-edit-container">
+        <h1 class="page-title">게시글 작성</h1>
+        <form id="post-form" class="post-form">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" class="form-control" required></textarea>
+            </div>
+            <div class="file-upload-container">
+                <label for="file-upload" class="file-upload-label">파일 첨부</label>
+                <input type="file" id="file-upload" multiple>
+                <div id="file-list">
+                    <ul></ul>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 게시판 시스템. All rights reserved.</p>
+    </footer>
+
+    <script src="../common/js/main.js"></script>
+    <script src="js/post-edit.js"></script>
+</body>
+</html>

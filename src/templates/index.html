@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body>
+    <div id="header-container"></div>
+    
+
+    <main>
+        <section class="welcome-section">
+            <h2>게시판 시스템에 오신 것을 환영합니다</h2>
+            <p>이곳에서 다양한 게시글을 작성하고 공유할 수 있습니다.</p>
+            <div class="action-buttons">
+                <a href="{{ url_for('post_list') }}" class="btn btn-primary">게시글 목록 보기</a>
+                <a href="{{ url_for('post_edit') }}" class="btn btn-secondary">게시글 작성하기</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ url_for('static', path='js/fragments.js') }}"></script>
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <script>
+        // 헤더와 푸터 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFragment();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,47 @@
+/* 회원 공통 스타일 */
+.member-container {
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.member-container h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* 회원 폼 공통 스타일 */
+.member-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.member-form .form-group {
+    margin-bottom: 0.5rem;
+}
+
+.member-form input,
+.member-form select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.member-form input:focus,
+.member-form select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+.member-form .form-actions {
+    margin-top: 2rem;
+}

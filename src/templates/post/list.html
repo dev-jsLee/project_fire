@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록 - 게시판 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-edit.css') }}">
+</head>
+<body>
+    <div id="header-container"></div>
+    <main>
+        <div class="post-list-container">
+            <h2>게시글 목록</h2>
+            
+            <div class="filter-group">
+                <div class="category-filter">
+                    <label for="category">카테고리:</label>
+                    <select id="category" name="category">
+                        <option value="">전체</option>
+                        <option value="notice">공지사항</option>
+                        <option value="general">일반</option>
+                        <option value="question">질문</option>
+                    </select>
+                </div>
+                <div class="page-size-filter">
+                    <label for="page-size">페이지당 게시글:</label>
+                    <select id="page-size" name="page-size">
+                        <option value="10">10개</option>
+                        <option value="20">20개</option>
+                        <option value="30">30개</option>
+                        <option value="50">50개</option>
+                    </select>
+                </div>
+            </div>
+
+            <table class="post-list">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                        <th>조회수</th>
+                    </tr>
+                </thead>
+                <tbody id="post-list-body">
+                    <!-- 게시글 목록이 여기에 동적으로 추가됩니다 -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="prev-page" class="btn">이전</button>
+                <span id="page-info">1 / 1</span>
+                <button id="next-page" class="btn">다음</button>
+            </div>
+
+            <div class="post-actions">
+                <a href="{{ url_for('post_edit') }}" class="btn btn-primary">글쓰기</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="{{ url_for('static', path='js/fragments.js') }}"></script>
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHeader();
+            loadFooter();
+        });
+    </script>
+</body>
+</html> 

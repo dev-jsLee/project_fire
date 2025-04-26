@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세 - 게시판 시스템</title>
+    <link rel="stylesheet" href="../common/css/style.css">
+    <link rel="stylesheet" href="css/post-detail.css">
+</head>
+<body>
+    <header id="common-header"></header>
+
+    <main>
+        <section class="post-detail-container">
+            <div class="post-header">
+                <h2 class="post-title">게시글 제목</h2>
+                <div class="post-meta">
+                    <span class="post-author">작성자: user1</span>
+                    <span class="post-date">작성일: 2023-01-01</span>
+                    <span class="post-views">조회수: 10</span>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>게시글 내용이 여기에 표시됩니다.</p>
+            </div>
+            <div class="post-actions">
+                <a href="post-list.html" class="btn btn-secondary">목록으로</a>
+                <a href="post-edit.html" class="btn btn-primary">수정</a>
+                <button class="btn btn-danger" id="delete-btn">삭제</button>
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="../common/js/main.js"></script>
+    <script src="js/post-detail.js"></script>
+</body>
+</html> 
