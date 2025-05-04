@@ -1,11 +1,11 @@
-<header id="common-header">
-    <h1>게시판 시스템</h1>
+<header>
+    <h1>서울소방</h1>
     <nav>
         <ul>
             <li><a href="/">홈</a></li>
             <li><a href="/posts">게시글 목록</a></li>
             {% if user %}
-                <li>{{ user.username }}님 환영합니다!</li>
+                <li>{{ user.name }}님 환영합니다!</li>
                 <li><a href="/logout">로그아웃</a></li>
             {% else %}
                 <li><a href="/login">로그인</a></li>
@@ -13,4 +13,4 @@
             {% endif %}
         </ul>
     </nav>
-</header> 
+</header>

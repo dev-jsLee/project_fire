@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시판 시스템</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-</head>
-<body>
-    <div id="header-container"></div>
-    
+{% extends "base.html" %}
 
+{% block title %}게시판 시스템{% endblock %}
+
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
     <main>
         <section class="welcome-section">
             <h2>게시판 시스템에 오신 것을 환영합니다</h2>
@@ -20,17 +17,13 @@
             </div>
         </section>
     </main>
+{% endblock %}
 
-    <div id="footer-container"></div>
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
 
+{% block scripts %}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="{{ url_for('static', path='js/fragments.js') }}"></script>
     <script src="{{ url_for('static', path='js/main.js') }}"></script>
-    <script>
-        // 헤더와 푸터 로드
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFragment();
-        });
-    </script>
-</body>
-</html> 
+{% endblock %} 

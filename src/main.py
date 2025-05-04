@@ -5,6 +5,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
+from starlette.middleware.sessions import SessionMiddleware
+import os
 
 from src.core.config import settings
 from src.api.endpoints import users, auth
@@ -24,6 +26,14 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+# 세션 미들웨어 설정
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.environ.get("SECRET_KEY", "your-secret-key-here"),
+    session_cookie="session",
+    max_age=1800  # 30분
 )
 
 # 정적 파일 설정
@@ -48,9 +58,20 @@ def get_db():
         db.close()
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def read_root(request: Request, db: Session = Depends(get_db)):
     """루트 경로에서 index.html을 반환"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    user = None
+    user_id = request.session.get("user_id")
+    if user_id:
+        user = db.query(User).filter(User.user_id == user_id).first()
+    return templates.TemplateResponse(
+        "index.html", 
+        {
+            "request": request, 
+            "user": user,
+            "footer": "fragments/footer.html"  # 푸터 템플릿 경로 추가
+        }
+    )
 
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
@@ -71,7 +92,8 @@ async def login(
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
     # 로그인 성공 시 세션에 사용자 정보 저장
-    # request.session["user_id"] = user.user_id
+    request.session["user_id"] = user.user_id
+    request.session["user_name"] = user.name
 
     return templates.TemplateResponse("index.html", {"request": request, "user": user})
 

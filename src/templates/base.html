@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}게시판 시스템{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block header %}
+        <!-- 기본 헤더 내용 (필요시) -->
+    {% endblock %}
+
+    {% block content %}
+        <!-- 페이지별 내용이 들어갈 자리 -->
+    {% endblock %}
+
+    {% block footer %}
+        <!-- 기본 푸터 내용 (필요시) -->
+    {% endblock %}
+
+    {% block scripts %}
+        <!-- 페이지별 스크립트가 들어갈 자리 -->
+    {% endblock %}
+</body>
+</html>
