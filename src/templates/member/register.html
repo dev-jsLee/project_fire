@@ -1,56 +1,278 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입 - 게시판 시스템</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+{% extends "base.html" %}
+
+{% block title %}회원가입 - 게시판 시스템{% endblock %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', path='css/register.css') }}">
-</head>
-<body>
-    <div id="header-container"></div>
+{% endblock %}
 
-    <main>
-        <div class="register-container">
-            <h2>회원가입</h2>
-            <form id="register-form" class="register-form" method="post">
-                <div class="form-group">
-                    <label for="user_id">아이디<span class="required">*</span></label>
-                    <input type="text" id="user_id" name="user_id" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">비밀번호<span class="required">*</span></label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="password_confirm">비밀번호 확인<span class="required">*</span></label>
-                    <input type="password" id="password_confirm" name="password_confirm" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">이메일<span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="name">닉네임<span class="required">*</span></label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <button type="submit" class="btn btn-primary">가입하기</button>
-            </form>
-            <div class="links">
-                <a href="/login">로그인으로 돌아가기</a>
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-box">
+        <h2>회원가입</h2>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form id="registerForm" method="POST" action="/register">
+            <div class="form-group">
+                <label for="user_id">아이디</label>
+                <input type="text" class="form-control" id="user_id" name="user_id" required>
             </div>
+            <div class="form-group">
+                <label for="name">닉네임</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="password_confirm">비밀번호 확인</label>
+                <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">회원가입</button>
+        </form>
+        <div class="login-link">
+            <p>이미 계정이 있으신가요? <a href="/login">로그인</a></p>
         </div>
-    </main>
+    </div>
+</div>
 
-    <div id="footer-container"></div>
+<!-- 회원가입 성공 모달 -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>회원가입 완료</h3>
+        <p>회원가입이 성공적으로 완료되었습니다.</p>
+        <p>로그인 페이지로 이동합니다...</p>
+    </div>
+</div>
 
-    <script src="{{ url_for('static', path='js/fragments.js') }}"></script>
+<style>
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px);
+        padding: 2rem 1rem;
+    }
+
+    .register-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .register-box h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-block {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .login-link a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .alert {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    /* 모달 스타일 */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: white;
+        margin: 15% auto;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .close {
+        position: absolute;
+        right: 1rem;
+        top: 0.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .close:hover {
+        color: #333;
+    }
+
+    @media (max-width: 480px) {
+        .register-box {
+            padding: 1.5rem;
+        }
+
+        .register-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            padding: 0.6rem;
+        }
+
+        .btn-block {
+            padding: 0.6rem;
+        }
+
+        .modal-content {
+            margin: 20% auto;
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const modal = document.getElementById('successModal');
+    const closeBtn = document.querySelector('.close');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // 비밀번호 확인
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password_confirm').value;
+        
+        if (password !== passwordConfirm) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(new FormData(form))
+            });
+
+            if (response.ok) {
+                modal.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                const data = await response.text();
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.textContent = data;
+                form.insertBefore(errorDiv, form.firstChild);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+        window.location.href = '/login';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            window.location.href = '/login';
+        }
+    }
+});
+</script>
+{% endblock %}
+
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
+
+{% block scripts %}
     <script src="{{ url_for('static', path='js/main.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadHeader();
-            loadFooter();
-        });
+    // 기존 회원가입 관련 JS 유지
     </script>
-</body>
-</html> 
+{% endblock %} 

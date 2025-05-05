@@ -1,0 +1,80 @@
+/* 게시글 공통 스타일 */
+.post-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.post-list th,
+.post-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.post-list th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.post-list tr:hover {
+    background-color: #f8f9fa;
+}
+
+.post-title {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.post-title:hover {
+    text-decoration: underline;
+}
+
+.post-meta {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.post-content {
+    margin: 2rem 0;
+    line-height: 1.8;
+    color: #444;
+}
+
+.post-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.no-posts {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .post-container {
+        padding: 15px;
+    }
+
+    .post-list th,
+    .post-list td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .post-list th:nth-child(3),
+    .post-list td:nth-child(3) {
+        display: none;
+    }
+} 

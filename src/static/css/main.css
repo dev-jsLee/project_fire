@@ -1,0 +1,47 @@
+/* 메인(인덱스) 페이지 스타일 */
+.welcome-section {
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 1.5rem auto;
+    max-width: 480px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.welcome-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+.welcome-section p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    width: 100%;
+    margin: 0 auto;
+}
+.action-btn-full {
+    width: 100%;
+    word-break: keep-all;
+    white-space: normal;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0.9rem 0.2rem;
+    font-size: 1rem;
+    border-radius: 6px;
+}
+/* 데스크탑도 모바일과 동일하게 */
+@media (min-width: 481px) {
+    .welcome-section {
+        max-width: 480px;
+    }
+    .action-buttons {
+        max-width: 480px;
+    }
+} 

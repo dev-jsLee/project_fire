@@ -1,0 +1,163 @@
+{% extends "post/post_list_base.html" %}
+
+{% block title %}게시글 목록 - 게시판 시스템{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-list.css') }}">
+{% endblock %}
+
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="post-list-container">
+            <h2>게시글 목록</h2>
+            
+            <div class="filter-group">
+                <div class="category-filter">
+                    <label for="category">카테고리:</label>
+                    <br>
+                    <select id="category" name="category" onchange="filterPosts()">
+                        <option value="">전체</option>
+                        <option value="notice">공지사항</option>
+                        <option value="general">일반</option>
+                        <option value="question">질문</option>
+                    </select>
+                </div>
+                <div class="page-size-filter">
+                    <label for="page-size">페이지당 게시글:</label>
+                    <br>
+                    <select id="page-size" name="page-size" onchange="filterPosts()">
+                        <option value="10">10개</option>
+                        <option value="20">20개</option>
+                        <option value="30">30개</option>
+                        <option value="50">50개</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="post-list-container">
+                <table class="post-list">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>카테고리</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody id="post-list-body">
+                        {% for post in posts %}
+                        <tr>
+                            <td>{{ post.post_id }}</td>
+                            <td>{{ post.category }}</td>
+                            <td><a href="{{ url_for('post_detail', post_id=post.post_id) }}">{{ post.title }}</a></td>
+                            <td>{{ post.user_id }}</td>
+                            <td>{{ post.created_at.strftime('%m월 %d일 %H:%M') }}</td>
+                            <td>{{ post.view_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button id="prev-page" class="btn" onclick="changePage(-1)">이전</button>
+                <span id="page-info">1 / 1</span>
+                <button id="next-page" class="btn" onclick="changePage(1)">다음</button>
+            </div>
+
+            <div class="post-actions">
+                {% if user %}
+                <a href="{{ url_for('post_new') }}" class="btn btn-primary">글쓰기</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-secondary">로그인</a>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+
+        async function filterPosts() {
+            const category = document.getElementById('category').value;
+            const pageSize = document.getElementById('page-size').value;
+            
+            try {
+                const response = await fetch(`/api/posts?category=${category}&page=${currentPage}&page_size=${pageSize}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                updatePostList(data.posts);
+                updatePagination(data.total_pages);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('게시글을 불러오는 중 오류가 발생했습니다.');
+            }
+        }
+
+        function updatePostList(posts) {
+            const tbody = document.getElementById('post-list-body');
+            tbody.innerHTML = '';
+            
+            posts.forEach(post => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${post.post_id}</td>
+                    <td>${post.category}</td>
+                    <td><a href="/posts/${post.post_id}">${post.title}</a></td>
+                    <td>${post.user_id}</td>
+                    <td>${formatDate(post.created_at)}</td>
+                    <td>${post.view_count}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updatePagination(total) {
+            totalPages = total;
+            document.getElementById('page-info').textContent = `${currentPage} / ${totalPages}`;
+            document.getElementById('prev-page').disabled = currentPage === 1;
+            document.getElementById('next-page').disabled = currentPage === totalPages;
+        }
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                filterPosts();
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const isThisYear = date.getFullYear() === now.getFullYear();
+            
+            if (isThisYear) {
+                return `${date.getMonth() + 1}월 ${date.getDate()}일 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            } else {
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            }
+        }
+
+        // 초기 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            filterPosts();
+        });
+    </script>
+{% endblock %} 

@@ -1,38 +1,105 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 상세 - 게시판 시스템</title>
-    <link rel="stylesheet" href="../common/css/style.css">
-    <link rel="stylesheet" href="css/post-detail.css">
-</head>
-<body>
-    <header id="common-header"></header>
+{% extends "base.html" %}
+
+{% block title %}게시글 상세 - 게시판 시스템{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-detail.css') }}">
+{% endblock %}
+
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
     <main>
         <section class="post-detail-container">
             <div class="post-header">
-                <h2 class="post-title">게시글 제목</h2>
+                <h2 class="post-title">{{ post.title }}</h2>
                 <div class="post-meta">
-                    <span class="post-author">작성자: user1</span>
-                    <span class="post-date">작성일: 2023-01-01</span>
-                    <span class="post-views">조회수: 10</span>
+                    <span class="post-category">카테고리: {{ post.category }}</span>
+                    <span class="post-author">작성자: {{ post.user_id }}</span>
+                    <span class="post-date">작성일: {{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    <span class="post-views">조회수: {{ post.view_count }}</span>
+                    <div class="post-actions-meta">
+                        <button class="btn-like {% if is_liked %}liked{% endif %}" id="like-btn" data-post-id="{{ post.post_id }}">
+                            <i class="fas fa-heart"></i>
+                            <span id="like-count">{{ post.like_count|default(0) }}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="post-content">
-                <p>게시글 내용이 여기에 표시됩니다.</p>
+                {{ post.content|safe }}
             </div>
             <div class="post-actions">
-                <a href="post-list.html" class="btn btn-secondary">목록으로</a>
-                <a href="post-edit.html" class="btn btn-primary">수정</a>
-                <button class="btn btn-danger" id="delete-btn">삭제</button>
+                <a href="{{ url_for('post_list') }}" class="btn btn-secondary">목록으로</a>
+                {% if user and (user.user_id == post.user_id or user.user_id == 'admin') %}
+                <a href="{{ url_for('post_edit', post_id=post.post_id) }}" class="btn btn-primary">수정</a>
+                <a href="{{ url_for('post_delete', post_id=post.post_id) }}" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                {% endif %}
             </div>
         </section>
     </main>
+{% endblock %}
 
-    <footer></footer>
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
 
-    <script src="../common/js/main.js"></script>
-    <script src="js/post-detail.js"></script>
-</body>
-</html> 
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='js/post-detail.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const likeBtn = document.getElementById('like-btn');
+            const likeCount = document.getElementById('like-count');
+            
+            likeBtn.addEventListener('click', async function() {
+                const postId = this.dataset.postId;
+                try {
+                    const response = await fetch(`/api/posts/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        likeCount.textContent = data.like_count;
+                        this.classList.toggle('liked');
+                    } else {
+                        alert('로그인이 필요합니다.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('좋아요 처리 중 오류가 발생했습니다.');
+                }
+            });
+
+            const deleteBtn = document.getElementById('delete-btn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', async function() {
+                    if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+                        const postId = this.dataset.postId;
+                        try {
+                            const response = await fetch(`/api/posts/${postId}`, {
+                                method: 'DELETE'
+                            });
+                            
+                            if (response.ok) {
+                                window.location.href = "{{ url_for('post_list') }}";
+                            } else {
+                                alert('게시글 삭제 중 오류가 발생했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('게시글 삭제 중 오류가 발생했습니다.');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %} 

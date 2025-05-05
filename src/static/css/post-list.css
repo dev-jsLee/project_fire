@@ -1,0 +1,111 @@
+/* 게시글 목록(리스트) 페이지 스타일 */
+.post-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.post-list-container h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.post-list {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.post-list th,
+.post-list td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 0.8rem;
+}
+
+.post-list th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.post-list tr:hover {
+    background-color: #f8f9fa;
+}
+
+.post-list td a {
+    color: #333;
+    text-decoration: none;
+}
+
+.post-list td a:hover {
+    color: #007bff;
+}
+
+/* 필터 그룹 스타일 */
+.filter-group {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 카테고리 필터 스타일 */
+.category-filter {
+    display: flex;
+    align-items: center;
+}
+
+.category-filter label {
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
+.category-filter select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    min-width: 120px;
+}
+
+/* 페이지 크기 필터 스타일 */
+.page-size-filter {
+    display: flex;
+    align-items: center;
+}
+
+.page-size-filter label {
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
+.page-size-filter select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    min-width: 80px;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+#page-info {
+    font-size: 0.9rem;
+    color: #666;
+}

@@ -5,25 +5,26 @@ const API_BASE_URL = 'http://localhost:8000/api/v1';
 const auth = {
     // 로그인 처리
     login(userData) {
-        localStorage.setItem('user', JSON.stringify(userData));
+        // 세션 스토리지에 사용자 정보 저장
+        sessionStorage.setItem('user', JSON.stringify(userData));
         this.updateHeader();
     },
 
     // 로그아웃 처리
     logout() {
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
         this.updateHeader();
         window.location.href = '/';
     },
 
     // 로그인 상태 확인
     isLoggedIn() {
-        return !!localStorage.getItem('user');
+        return !!sessionStorage.getItem('user');
     },
 
     // 현재 사용자 정보 가져오기
     getCurrentUser() {
-        const userStr = localStorage.getItem('user');
+        const userStr = sessionStorage.getItem('user');
         return userStr ? JSON.parse(userStr) : null;
     },
 
@@ -32,32 +33,40 @@ const auth = {
         const $headerNav = $('#common-header nav ul');
         if (!$headerNav.length) return;
 
-        // const isLoggedIn = this.isLoggedIn();
-        // const user = this.getCurrentUser();
+        const isLoggedIn = this.isLoggedIn();
+        const user = this.getCurrentUser();
 
         // 로그인/회원 정보 메뉴 아이템 찾기 또는 생성
-        // let $authMenuItem = $headerNav.find('.auth-menu-item');
-        // if (!$authMenuItem.length) {
-        //     $authMenuItem = $('<li class="auth-menu-item"></li>').appendTo($headerNav);
-        // }
+        let $authMenuItem = $headerNav.find('.auth-menu-item');
+        if (!$authMenuItem.length) {
+            $authMenuItem = $('<li class="auth-menu-item"></li>').appendTo($headerNav);
+        }
 
-        // if (isLoggedIn && user) {
+        if (isLoggedIn && user) {
             // 로그인 상태: 회원 정보 메뉴 표시
-        $authMenuItem.html(`
-            
-        `);
+            $authMenuItem.html(`
+                <div class="user-menu">
+                    <span>${user.name || user.user_id}</span>
+                    <div class="user-menu-dropdown">
+                        <ul>
+                            <li><a href="/mypage">마이페이지</a></li>
+                            <li><a href="#" id="logout-btn">로그아웃</a></li>
+                        </ul>
+                    </div>
+                </div>
+            `);
 
-        // 로그아웃 버튼에 이벤트 리스너 추가
-        $('#logout-btn').on('click', (e) => {
-            e.preventDefault();
-            this.logout();
-        });
-        // } else {
-        //     // 비로그인 상태: 로그인/회원가입 링크 표시
-        //     $authMenuItem.html(`
-        //         <a href="/login">로그인</a>
-        //     `);
-        // }
+            // 로그아웃 버튼에 이벤트 리스너 추가
+            $('#logout-btn').on('click', (e) => {
+                e.preventDefault();
+                this.logout();
+            });
+        } else {
+            // 비로그인 상태: 로그인/회원가입 링크 표시
+            $authMenuItem.html(`
+                <a href="/login">로그인</a>
+            `);
+        }
     }
 };
 
@@ -125,21 +134,27 @@ $(document).ready(function() {
         const password = $('#password').val();
         
         try {
-            const response = await $.ajax({
-                url: `${API_BASE_URL}/auth/login`,
+            const response = await fetch('/login', {
                 method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    username: userId,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    user_id: userId,
                     password: password
                 })
             });
 
-            auth.login(response);
-            window.location.href = '/';
+            if (response.ok) {
+                const data = await response.json();
+                auth.login(data);
+                window.location.href = '/';
+            } else {
+                alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+            }
         } catch (error) {
             console.error('로그인 오류:', error);
-            alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+            alert('로그인 처리 중 오류가 발생했습니다.');
         }
     });
 

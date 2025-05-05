@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}마이페이지 - {{ user.name }}님의 정보{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/post.css') }}">
+<style>
+    .mypage-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .user-info {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .user-info h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #666;
+        margin-right: 10px;
+    }
+
+    .posts-section h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .mypage-container {
+            padding: 15px;
+        }
+
+        .user-info {
+            padding: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="mypage-container">
+    <div class="user-info">
+        <h2>내 정보</h2>
+        <div class="info-item">
+            <span class="info-label">아이디:</span>
+            <span>{{ user.user_id }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">이름:</span>
+            <span>{{ user.name }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">이메일:</span>
+            <span>{{ user.email }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">가입일:</span>
+            <span>{{ user.created_at.strftime('%Y-%m-%d') }}</span>
+        </div>
+    </div>
+
+    <div class="posts-section">
+        <h3>내가 작성한 글</h3>
+        {% if posts %}
+        <table class="post-list">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>카테고리</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="/posts/{{ post.id }}" class="post-title">{{ post.title }}</a>
+                    </td>
+                    <td>{{ post.category }}</td>
+                    <td>
+                        {% if post.created_at.year == current_year %}
+                            {{ post.created_at.strftime('%m월 %d일 %H:%M') }}
+                        {% else %}
+                            {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-posts">
+            작성한 게시글이 없습니다.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+{% endblock %} 

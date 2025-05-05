@@ -1,16 +1,121 @@
-<header>
-    <h1>서울소방</h1>
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/header.css') }}">
+{% endblock %}
+
+{% block header %}
+<header id="common-header">
     <nav>
         <ul>
             <li><a href="/">홈</a></li>
-            <li><a href="/posts">게시글 목록</a></li>
-            {% if user %}
-                <li>{{ user.name }}님 환영합니다!</li>
-                <li><a href="/logout">로그아웃</a></li>
-            {% else %}
-                <li><a href="/login">로그인</a></li>
-                <li><a href="/register">회원가입</a></li>
-            {% endif %}
+            <li><a href="/posts">게시판</a></li>
+            <li class="auth-menu-item">
+                {% if user %}
+                <div class="user-menu">
+                    <span>{{ user.name or user.user_id }}</span>
+                    <div class="user-menu-dropdown">
+                        <ul>
+                            <li><a href="/mypage">마이페이지</a></li>
+                            <li><a href="/logout">로그아웃</a></li>
+                        </ul>
+                    </div>
+                </div>
+                {% else %}
+                <a href="/login">로그인</a>
+                {% endif %}
+            </li>
         </ul>
     </nav>
 </header>
+
+<style>
+    #common-header {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1rem 0;
+    }
+    #common-header nav ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        list-style: none;
+    }
+    #common-header nav ul li {
+        margin: 0 1rem;
+    }
+    #common-header nav ul li a {
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    #common-header nav ul li a:hover {
+        color: #007bff;
+    }
+    .user-menu {
+        position: relative;
+        cursor: pointer;
+    }
+    .user-menu span {
+        color: #333;
+        font-weight: 500;
+    }
+    .user-menu-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        min-width: 150px;
+        z-index: 1000;
+        white-space: nowrap;
+    }
+    .user-menu:hover .user-menu-dropdown {
+        display: block;
+    }
+    .user-menu-dropdown ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .user-menu-dropdown ul li {
+        margin: 0;
+        width: 100%;
+    }
+    .user-menu-dropdown ul li a {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        text-align: left;
+    }
+    .user-menu-dropdown ul li a:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+    }
+    @media (max-width: 768px) {
+        .user-menu-dropdown {
+            position: fixed;
+            top: auto;
+            right: 1rem;
+            left: auto;
+            width: 200px;
+            max-width: calc(100% - 2rem);
+        }
+        .user-menu-dropdown ul li a {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}

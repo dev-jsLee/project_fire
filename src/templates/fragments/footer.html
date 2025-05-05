@@ -1,3 +1,146 @@
-<footer>
-    <p>&copy; 2025 게시판 시스템. All rights reserved.</p>
-</footer> 
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>서울소방</h3>
+                <p>서울특별시 서울소방</p>
+                <p>주소: 서울특별시 어딘가</p>
+                <p>전화: 02-120</p>
+            </div>
+            <div class="footer-section">
+                <h3>바로가기</h3>
+                <ul>
+                    <li><a href="/">홈</a></li>
+                    <li><a href="/posts">게시판</a></li>
+                    <li><a href="/login">로그인</a></li>
+                    <li><a href="/register">회원가입</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 서울소방. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background-color: #f8f9fa;
+        padding: 3rem 0 1rem;
+        margin-top: auto;
+    }
+    .footer-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        gap: 2rem;
+    }
+    .footer-section {
+        flex: 1 1 auto;
+        min-width: 200px;
+        margin-bottom: 2rem;
+        height: auto;
+        min-height: 0;
+        padding: 0;
+    }
+    .footer-section h3 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+    .footer-section p {
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .footer-section ul li {
+        margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+        color: #666;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .footer-section ul li a:hover {
+        color: #007bff;
+    }
+    .footer-bottom {
+        text-align: center;
+        padding-top: 1rem;
+        border-top: 1px solid #dee2e6;
+        margin-top: 0;
+    }
+    .footer-bottom p {
+        color: #666;
+        margin: 0;
+    }
+    @media (max-width: 900px) {
+        .footer-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        .footer-section {
+            margin-bottom: 1.5rem;
+            min-width: 0;
+        }
+        .footer-section:last-child {
+            margin-bottom: 0;
+        }
+    }
+    @media (max-width: 600px) {
+        .footer {
+            padding: 1.5rem 0 0.5rem;
+        }
+        .footer-content {
+            gap: 1rem;
+        }
+        .footer-section h3 {
+            font-size: 1rem;
+        }
+        .footer-section p, .footer-section ul li a {
+            font-size: 0.95rem;
+        }
+        /* 바로가기 목록 2열 배치 */
+        .footer-section ul {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1.5rem;
+        }
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        /* 서울소방 블록 다시 보이게 */
+        .footer-section:first-child {
+            display: block;
+            margin-bottom: 0;
+        }
+        /* 바로가기 블록 숨김 */
+        .footer-section:nth-child(2) {
+            display: none;
+        }
+        /* 바로가기와 저작권 사이 간격 조정 */
+        .footer-bottom {
+            margin-top: 0;
+            padding-top: 1rem;
+        }
+        .container {
+            margin-bottom: 0;
+        }
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/footer.css') }}">
+{% endblock %} 

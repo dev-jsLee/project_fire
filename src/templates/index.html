@@ -5,15 +5,42 @@
 {% block header %}
     {% include "fragments/header.html" %}
 {% endblock %}
-
+<style>
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .action-btn-full {
+        width: 100%;
+        word-break: keep-all;
+        white-space: normal;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 1rem 0.5rem;
+        font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+        .action-buttons {
+            max-width: 100%;
+        }
+        .action-btn-full {
+            /* font-size: 14px; */
+            padding: 1rem 0.2rem;
+        }
+    }
+    </style> 
 {% block content %}
     <main>
         <section class="welcome-section">
-            <h2>게시판 시스템에 오신 것을 환영합니다</h2>
+            <h2>서울소방 게시판</h2>
             <p>이곳에서 다양한 게시글을 작성하고 공유할 수 있습니다.</p>
             <div class="action-buttons">
-                <a href="{{ url_for('post_list') }}" class="btn btn-primary">게시글 목록 보기</a>
-                <a href="{{ url_for('post_edit') }}" class="btn btn-secondary">게시글 작성하기</a>
+                <a href="{{ url_for('post_list') }}" class="btn btn-primary action-btn-full">게시글<br>목록 보기</a>
+                <a href="{{ url_for('post_new') }}" class="btn btn-secondary action-btn-full">게시글<br>작성하기</a>
             </div>
         </section>
     </main>
@@ -24,6 +51,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ url_for('static', path='js/main.js') }}"></script>
-{% endblock %} 
+{% endblock %}
+

@@ -1,55 +1,90 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 작성/수정</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/post-list.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/post-edit.css') }}">
-</head>
-<body>
-    <header id="common-header">
-        <h1>게시판 시스템</h1>
-        <nav>
-            <ul>
-                <li><a href="../common/index.html">홈</a></li>
-                <li><a href="post-list.html">게시글 목록</a></li>
-                <li><a href="../member/login.html">로그인</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
+{% block title %}
+    {% if is_edit %}게시글 수정{% else %}게시글 작성{% endif %} - 게시판 시스템
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/post-edit.css') }}">
+{% endblock %}
+
+{% block header %}
+    {% include "fragments/header.html" %}
+{% endblock %}
+
+{% block content %}
     <div class="post-edit-container">
-        <h1 class="page-title">게시글 작성</h1>
-        <form id="post-form" class="post-form">
+        <h1 class="page-title">
+            {% if is_edit %}게시글 수정{% else %}게시글 작성{% endif %}
+        </h1>
+        <form id="post-form" class="post-form" method="post" enctype="multipart/form-data"
+              action="{% if is_edit %}{{ url_for('post_update', post_id=post.id) }}{% else %}{{ url_for('post_create') }}{% endif %}">
+            {% if is_edit %}
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+            {% endif %}
+            
             <div class="form-group">
                 <label for="title">제목</label>
-                <input type="text" id="title" name="title" class="form-control" required>
+                <input type="text" id="title" name="title" class="form-control" required
+                       value="{% if is_edit %}{{ post.title }}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="content">내용</label>
-                <textarea id="content" name="content" class="form-control" required></textarea>
+                <textarea id="content" name="content" class="form-control" required>{% if is_edit %}{{ post.content }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="category">카테고리</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="">카테고리 선택</option>
+                    <option value="일반" {% if is_edit and post.category == '일반' %}selected{% endif %}>일반</option>
+                    <option value="공지" {% if is_edit and post.category == '공지' %}selected{% endif %}>공지</option>
+                </select>
             </div>
             <div class="file-upload-container">
-                <label for="file-upload" class="file-upload-label">파일 첨부</label>
-                <input type="file" id="file-upload" multiple>
+                <label for="files" class="file-upload-label">파일 첨부</label>
+                <input type="file" id="files" name="files" multiple>
                 <div id="file-list">
-                    <ul></ul>
+                    <ul>
+                        {% if is_edit and post.files %}
+                        {% for file in post.files %}
+                        <li>
+                            {{ file.filename }}
+                            <button type="button" class="btn-remove-file" data-file-id="{{ file.id }}">삭제</button>
+                        </li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
             <div class="button-group">
                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                <button type="submit" class="btn btn-primary">저장</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if is_edit %}수정하기{% else %}저장하기{% endif %}
+                </button>
             </div>
         </form>
     </div>
+{% endblock %}
 
-    <footer>
-        <p>&copy; 2023 게시판 시스템. All rights reserved.</p>
-    </footer>
+{% block footer %}
+    {% include "fragments/footer.html" %}
+{% endblock %}
 
-    <script src="../common/js/main.js"></script>
-    <script src="js/post-edit.js"></script>
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/main.js') }}"></script>
+    <script src="{{ url_for('static', path='js/post-edit.js') }}"></script>
+    {% if is_edit %}
+    <script>
+        // 수정 모드일 때만 실행되는 스크립트
+        document.addEventListener('DOMContentLoaded', function() {
+            // 기존 파일 삭제 처리
+            document.querySelectorAll('.btn-remove-file').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const fileId = this.dataset.fileId;
+                    // 파일 삭제 API 호출
+                });
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}
