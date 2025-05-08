@@ -1,27 +1,28 @@
 FROM ubuntu:20.04
 
-# 기본 패키지 설치 및 Python 3.11.8 설치
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update \
-    && apt-get install -y python3.11 python3.11-distutils python3.11-dev \
-    && apt-get install -y python3-pip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# 필수 패키지 설치 (curl 등)
+RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-# Python 3.11을 기본 Python으로 설정
-RUN ln -sf /usr/bin/python3.11 /usr/bin/python3
+# uv 설치
+RUN curl -Ls https://astral.sh/uv/install.sh | sh
+
+# uv로 Python 3.11.8 설치
+RUN uv python install 3.11.8
 
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# requirements.txt 복사 및 패키지 설치
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+# 의존성 파일만 먼저 복사 (빌드 캐시 활용)
+COPY pyproject.toml uv.lock ./
 
-# 소스 코드 복사
+# 패키지 설치
+RUN uv pip install --python 3.11.8 .
+
+# 소스 코드 전체 복사 (나중에)
 COPY . .
 
-# 서버 실행
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+# start.sh 실행 권한 부여
+RUN chmod +x start.sh
+
+# 서버 자동 실행 대신 start.sh로 실행하도록 변경
+CMD ["/app/start.sh"] 

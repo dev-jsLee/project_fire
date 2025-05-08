@@ -1,5 +1,16 @@
 -- 게시판 시스템 데이터베이스 스키마
 
+-- 카테고리 테이블
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 ID',
+    name VARCHAR(50) NOT NULL UNIQUE COMMENT '카테고리 이름',
+    description VARCHAR(200) COMMENT '카테고리 설명',
+    is_active BOOLEAN DEFAULT TRUE COMMENT '활성화 여부',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    INDEX idx_name (name) COMMENT '카테고리 이름 인덱스'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='카테고리 테이블';
+
 -- 사용자 테이블
 CREATE TABLE users (
     user_id VARCHAR(50) PRIMARY KEY COMMENT '사용자 ID',
@@ -18,16 +29,17 @@ CREATE TABLE users (
 CREATE TABLE posts (
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '게시글 고유 ID',
     user_id VARCHAR(50) NOT NULL COMMENT '작성자 ID',
+    category_id INT NOT NULL COMMENT '카테고리 ID',
     title VARCHAR(200) NOT NULL COMMENT '게시글 제목',
     content TEXT NOT NULL COMMENT '게시글 내용',
-    category VARCHAR(50) DEFAULT '일반' COMMENT '게시글 카테고리',
     view_count INT DEFAULT 0 COMMENT '조회수',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '작성일시',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     INDEX idx_created_at (created_at) COMMENT '작성일시 인덱스',
     INDEX idx_user_id (user_id) COMMENT '작성자 ID 인덱스',
-    INDEX idx_category (category) COMMENT '카테고리 인덱스',
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE COMMENT '사용자 삭제시 게시글도 삭제'
+    INDEX idx_category_id (category_id) COMMENT '카테고리 ID 인덱스',
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE COMMENT '사용자 삭제시 게시글도 삭제',
+    FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE RESTRICT COMMENT '카테고리 삭제 제한'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='게시글 테이블';
 
 -- 댓글 테이블

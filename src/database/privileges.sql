@@ -6,9 +6,9 @@ CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 -- 사용자 생성
-CREATE USER IF NOT EXISTS 'bb_admin'@'localhost' IDENTIFIED BY 'admin_password';
-CREATE USER IF NOT EXISTS 'bb_user'@'localhost' IDENTIFIED BY 'user_password';
-CREATE USER IF NOT EXISTS 'bb_guest'@'localhost' IDENTIFIED BY 'guest_password';
+CREATE USER IF NOT EXISTS 'bb_admin'@'localhost' IDENTIFIED BY 'sfire11!';
+CREATE USER IF NOT EXISTS 'bb_user'@'localhost' IDENTIFIED BY 'sfire11!';
+CREATE USER IF NOT EXISTS 'bb_guest'@'localhost' IDENTIFIED BY 'sfire11!';
 
 -- 관리자 권한 (모든 권한)
 GRANT ALL PRIVILEGES ON sfire.* TO 'bb_admin'@'localhost';
@@ -32,11 +32,11 @@ GRANT SELECT ON sfire.comments TO 'bb_guest'@'localhost';
 GRANT SELECT ON sfire.attachments TO 'bb_guest'@'localhost';
 
 -- 특정 IP에서의 접근 허용 (예: 개발 서버)
-CREATE USER IF NOT EXISTS 'bb_admin'@'192.168.1.%' IDENTIFIED BY 'admin_password';
+CREATE USER IF NOT EXISTS 'bb_admin'@'192.168.1.%' IDENTIFIED BY 'sfire11!';
 GRANT ALL PRIVILEGES ON sfire.* TO 'bb_admin'@'192.168.1.%';
 
 -- 백업용 사용자
-CREATE USER IF NOT EXISTS 'bb_backup'@'localhost' IDENTIFIED BY 'backup_password';
+CREATE USER IF NOT EXISTS 'bb_backup'@'localhost' IDENTIFIED BY 'sfire11!';
 GRANT SELECT, SHOW VIEW, LOCK TABLES, EVENT ON sfire.* TO 'bb_backup'@'localhost';
 
 -- 권한 적용
